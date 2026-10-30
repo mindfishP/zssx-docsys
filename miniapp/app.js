@@ -1,12 +1,11 @@
-// 小程序入口：登录态检查（SRS 2.2 接入层）
+// 小程序入口：恢复登录态、记录全局用户信息
+const auth = require('./utils/auth')
+
 App({
-  onLaunch() {
-    const token = wx.getStorageSync('token')
-    if (!token) {
-      wx.reLaunch({ url: '/pages/login/login' })
-    }
-  },
   globalData: {
-    userInfo: wx.getStorageSync('userInfo') || null
+    user: null
+  },
+  onLaunch() {
+    this.globalData.user = auth.getUser()
   }
 })

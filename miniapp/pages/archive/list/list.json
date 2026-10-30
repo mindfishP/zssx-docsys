@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "档案管理",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 80
+}

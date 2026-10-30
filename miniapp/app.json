@@ -2,15 +2,20 @@
   "pages": [
     "pages/index/index",
     "pages/login/login",
-    "pages/fill/fill",
-    "pages/message/message",
-    "pages/mine/mine"
+    "pages/archive/list/list",
+    "pages/archive/detail/detail",
+    "pages/push/list/list",
+    "pages/push/detail/detail",
+    "pages/borrow/borrow",
+    "pages/mine/mine",
+    "pages/fill/fill"
   ],
   "window": {
-    "navigationBarTitleText": "商协会档案填报",
+    "navigationBarTitleText": "商协会档案",
     "navigationBarBackgroundColor": "#1a2330",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#f5f6f8"
+    "backgroundColor": "#f5f6f8",
+    "backgroundTextStyle": "dark"
   },
   "tabBar": {
     "color": "#909399",
@@ -19,10 +24,11 @@
     "borderStyle": "black",
     "list": [
       { "pagePath": "pages/index/index", "text": "工作台" },
-      { "pagePath": "pages/fill/fill", "text": "填报" },
-      { "pagePath": "pages/message/message", "text": "消息" },
+      { "pagePath": "pages/archive/list/list", "text": "档案" },
+      { "pagePath": "pages/borrow/borrow", "text": "借阅" },
       { "pagePath": "pages/mine/mine", "text": "我的" }
     ]
   },
+  "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

@@ -1,0 +1,8 @@
+<view class="page">
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">暂无推送</view>
+  <view wx:for="{{list}}" wx:key="pushId" class="item" data-id="{{item.pushId}}" bindtap="openDetail">
+    <view class="item-title">{{item.title}}</view>
+    <view class="muted">{{item.publishedAt}}</view>
+    <view class="preview">{{item.content}}</view>
+  </view>
+</view>

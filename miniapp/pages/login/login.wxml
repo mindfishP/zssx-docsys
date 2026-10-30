@@ -1,5 +1,22 @@
-<view class="wrap">
-  <view class="title">中山商协会档案填报</view>
-  <view class="sub">微信小程序填报端（SRS 2.2）</view>
-  <button class="btn-primary" bindtap="onWxLogin">微信一键登录</button>
+<view class="page">
+  <view class="hero">
+    <view class="logo">档</view>
+    <view class="name">商协会档案资料系统</view>
+    <view class="sub">中山市商协会“一协一档”移动端</view>
+  </view>
+
+  <view class="form">
+    <view class="field">
+      <text class="label">账号</text>
+      <input class="input" value="{{username}}" placeholder="请输入账号" bindinput="onUsername" />
+    </view>
+    <view class="field">
+      <text class="label">密码</text>
+      <input class="input" password value="{{password}}" placeholder="请输入密码" bindinput="onPassword" />
+    </view>
+    <button class="btn login-btn" loading="{{loading}}" bindtap="onLogin">登 录</button>
+    <view class="divider"><text>或</text></view>
+    <button class="btn btn-ghost" bindtap="onWechatLogin">微信一键登录</button>
+    <view class="tip center">账号由主管部门发放邀请码后注册；忘记密码请联系管理员重置</view>
+  </view>
 </view>

@@ -1,0 +1,39 @@
+<view class="page" wx:if="{{archive}}">
+  <view class="card">
+    <view class="row">
+      <view class="title">{{archive.title}}</view>
+      <text class="tag {{statusCls}}">{{statusText}}</text>
+    </view>
+    <view class="meta">档案编号：{{archive.archiveId || '—（未归档）'}}</view>
+    <view class="meta">协会：{{archive.assocCode}}　分类：{{archive.categoryCode}}</view>
+    <view class="meta">年度：{{archive.archiveYear}}　责任者：{{archive.responsibility || '—'}}</view>
+    <view class="meta">密级：{{archive.securityLevel === 2 ? '内部' : '公开'}}　期限：{{archive.retention || '—'}}</view>
+    <view class="meta">提交时间：{{submitAt}}</view>
+    <view wx:if="{{archive.rejectReason}}" class="reject">退回意见：{{archive.rejectReason}}</view>
+  </view>
+
+  <view class="card">
+    <view class="title">附件（{{attachments.length}}）</view>
+    <view wx:if="{{attachments.length === 0}}" class="empty">暂无附件</view>
+    <view wx:for="{{attachments}}" wx:key="attachId" class="attach" data-id="{{item.attachId}}"
+      data-name="{{item.fileName}}" bindtap="openAttachment">
+      <view class="attach-name">{{index + 1}}. {{item.fileName}}</view>
+      <view class="muted">{{item.sizeText}} · 点击查看</view>
+    </view>
+    <view wx:if="{{borrowed}}" class="tip">借阅查阅中：可在线查看，不提供下载另存；到期自动归还。</view>
+  </view>
+
+  <view class="card">
+    <view class="title">审核记录（{{reviews.length}}）</view>
+    <view wx:if="{{reviews.length === 0}}" class="empty">暂无审核记录</view>
+    <view wx:for="{{reviews}}" wx:key="reviewId" class="review">
+      <view class="row">
+        <text class="muted">{{item.nodeLevel === 2 ? '复审' : '初审'}}</text>
+        <text class="tag {{item.reviewResult === 1 ? 'tag-success' : 'tag-danger'}}">{{item.reviewResult === 1 ? '通过' : '退回'}}</text>
+      </view>
+      <view class="review-text">{{item.reviewOpinion || '（无意见）'}}</view>
+      <view class="muted">{{item.reviewAt}}</view>
+    </view>
+  </view>
+</view>
+<view wx:else class="empty">加载中…</view>

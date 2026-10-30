@@ -1,0 +1,20 @@
+<view class="page">
+  <scroll-view class="tabs" scroll-x>
+    <view wx:for="{{tabs}}" wx:key="value" class="tab {{status === item.value ? 'active' : ''}}"
+      data-value="{{item.value}}" bindtap="onTab">{{item.label}}</view>
+  </scroll-view>
+
+  <view class="list">
+    <view wx:if="{{list.length === 0 && !loading}}" class="empty">暂无档案</view>
+    <view wx:for="{{list}}" wx:key="bizId" class="item" data-id="{{item.bizId}}" bindtap="openDetail">
+      <view class="row">
+        <view class="item-title">{{item.title}}</view>
+        <text class="tag {{item.statusCls}}">{{item.statusText}}</text>
+      </view>
+      <view class="muted">{{item.assocCode}} · {{item.archiveYear}} 年 · {{item.majorCode}} 类</view>
+      <view class="muted">档案编号：{{item.archiveId || '—（未归档）'}}</view>
+    </view>
+    <view wx:if="{{hasMore && list.length > 0}}" class="more" bindtap="loadMore">{{loadingMore ? '加载中…' : '加载更多'}}</view>
+    <view wx:if="{{!hasMore && list.length > 0}}" class="more muted">没有更多了</view>
+  </view>
+</view>

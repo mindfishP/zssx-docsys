@@ -1,25 +1,53 @@
-// 微信登录（SRS 7.2）：wx.login 取 code，后端换 openid 绑定账号
-const { request } = require('../../utils/request')
+const api = require('../../utils/api')
+const auth = require('../../utils/auth')
 
 Page({
-  data: { canLogin: true },
-  onWxLogin() {
+  data: {
+    username: '',
+    password: '',
+    loading: false
+  },
+
+  onUsername(e) {
+    this.setData({ username: e.detail.value })
+  },
+
+  onPassword(e) {
+    this.setData({ password: e.detail.value })
+  },
+
+  async onLogin() {
+    const { username, password } = this.data
+    if (!username || !password) {
+      wx.showToast({ title: '请输入账号和密码', icon: 'none' })
+      return
+    }
+    this.setData({ loading: true })
+    try {
+      const data = await api.login({ username, password })
+      auth.setAuth(data)
+      wx.reLaunch({ url: '/pages/index/index' })
+    } catch (e) {
+      // 错误提示已在 request 内统一处理
+    } finally {
+      this.setData({ loading: false })
+    }
+  },
+
+  onWechatLogin() {
     wx.login({
-      success: ({ code }) => {
-        request({ url: '/auth/wechat-login', method: 'POST', data: { code } })
-          .then((data) => {
-            wx.setStorageSync('token', data.token)
-            wx.setStorageSync('userInfo', data)
-            getApp().globalData.userInfo = data
-            wx.reLaunch({ url: '/pages/index/index' })
-          })
-          .catch(() => {
-            wx.showModal({
-              title: '提示',
-              content: '该微信尚未绑定系统账号，请输入 Web 端账号口令完成绑定（框架阶段直接绑定）',
-              showCancel: false
-            })
-          })
+      success: async (res) => {
+        if (!res.code) {
+          wx.showToast({ title: '微信登录失败', icon: 'none' })
+          return
+        }
+        try {
+          const data = await api.wechatLogin({ code: res.code })
+          auth.setAuth(data)
+          wx.reLaunch({ url: '/pages/index/index' })
+        } catch (e) {
+          wx.showToast({ title: '该微信尚未绑定账号，请先用账号登录', icon: 'none' })
+        }
       }
     })
   }

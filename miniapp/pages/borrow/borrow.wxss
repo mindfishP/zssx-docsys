@@ -1,0 +1,7 @@
+.tabs { display: flex; background: #fff; }
+.tab { flex: 1; text-align: center; padding: 24rpx 0; font-size: 28rpx; color: #606266; }
+.tab.active { color: #d4875a; font-weight: 600; border-bottom: 4rpx solid #d4875a; }
+.page { padding-bottom: 40rpx; }
+.item { background: #fff; margin: 20rpx 24rpx; border-radius: 16rpx; padding: 28rpx; }
+.item-title { flex: 1; font-size: 28rpx; font-weight: 600; margin-right: 16rpx; }
+.btn.small { margin-top: 20rpx; font-size: 26rpx; padding: 14rpx 0; }

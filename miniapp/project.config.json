@@ -1,12 +1,17 @@
 {
-  "appid": "wx0000000000000000",
-  "projectname": "association-miniapp",
+  "appid": "touristappid",
+  "projectname": "zssx-archive-miniapp",
   "compileType": "miniprogram",
+  "miniprogramRoot": "./",
+  "libVersion": "3.0.0",
   "setting": {
     "urlCheck": false,
     "es6": true,
+    "enhance": true,
     "postcss": true,
-    "minified": true
+    "minified": true,
+    "packNpmManually": false,
+    "nodeModules": false
   },
-  "libVersion": "3.0.0"
+  "condition": {}
 }

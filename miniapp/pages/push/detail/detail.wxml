@@ -1,0 +1,12 @@
+<view class="page" wx:if="{{detail}}">
+  <view class="card">
+    <view class="title big">{{detail.title}}</view>
+    <view class="muted">{{detail.publishedAt}} · 编号 #{{detail.pushId}}</view>
+    <view class="content">{{detail.content}}</view>
+  </view>
+  <view class="card">
+    <view class="row"><text class="muted">范围类型</text><text>{{scopeLabel}}</text></view>
+    <view class="row"><text class="muted">目标对象</text><text>{{targetsText}}</text></view>
+  </view>
+</view>
+<view wx:else class="empty">加载中…</view>

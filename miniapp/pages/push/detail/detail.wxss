@@ -1,0 +1,3 @@
+.big { font-size: 34rpx; }
+.content { margin-top: 20rpx; font-size: 28rpx; line-height: 1.9; color: #303133; }
+.row { padding: 12rpx 0; }

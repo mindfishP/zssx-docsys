@@ -1,0 +1,6 @@
+.meta { color: #606266; font-size: 26rpx; margin-top: 8rpx; }
+.reject { margin-top: 16rpx; padding: 16rpx; background: #fef0f0; color: #f56c6c; font-size: 26rpx; border-radius: 8rpx; }
+.attach { padding: 20rpx 0; border-top: 1rpx solid #ebeef5; }
+.attach-name { font-size: 28rpx; margin-bottom: 6rpx; }
+.review { padding: 20rpx 0; border-top: 1rpx solid #ebeef5; }
+.review-text { margin: 8rpx 0; font-size: 26rpx; }

@@ -1,3 +1,15 @@
-.wrap { padding: 160rpx 60rpx; text-align: center; }
-.title { font-size: 40rpx; font-weight: 700; color: #1a2330; }
-.sub { color: #909399; font-size: 26rpx; margin: 16rpx 0 80rpx; }
+.page { min-height: 100vh; background: #1a2330; padding: 0 48rpx; }
+.hero { padding: 160rpx 0 60rpx; text-align: center; }
+.logo {
+  width: 120rpx; height: 120rpx; line-height: 120rpx; margin: 0 auto 28rpx;
+  border-radius: 24rpx; background: #d4875a; color: #fff; font-size: 56rpx; font-weight: 700;
+}
+.name { color: #fff; font-size: 38rpx; font-weight: 600; }
+.sub { color: #8b98a8; font-size: 24rpx; margin-top: 12rpx; }
+.form { background: #fff; border-radius: 20rpx; padding: 40rpx 32rpx; }
+.field { display: flex; align-items: center; border-bottom: 1rpx solid #ebeef5; padding: 24rpx 0; }
+.label { width: 110rpx; color: #606266; font-size: 28rpx; }
+.input { flex: 1; font-size: 30rpx; }
+.login-btn { margin-top: 40rpx; }
+.divider { text-align: center; color: #c0c4cc; font-size: 24rpx; margin: 28rpx 0; }
+.center { text-align: center; margin-top: 28rpx; }

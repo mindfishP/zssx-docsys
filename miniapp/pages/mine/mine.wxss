@@ -1,3 +1,8 @@
-.name { font-size: 36rpx; font-weight: 700; }
-.meta { color: #606266; margin-top: 10rpx; }
-.logout { margin: 40rpx; background: #fff; color: #a5493c; border-radius: 12rpx; }
+.profile { display: flex; align-items: center; padding: 48rpx 32rpx; background: #1a2330; }
+.avatar {
+  width: 112rpx; height: 112rpx; line-height: 112rpx; text-align: center; border-radius: 50%;
+  background: #d4875a; color: #fff; font-size: 44rpx; margin-right: 24rpx;
+}
+.info .name { color: #fff; font-size: 34rpx; font-weight: 600; }
+.info .muted { color: #8b98a8; }
+.list { padding: 0; }

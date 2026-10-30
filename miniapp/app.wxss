@@ -1,31 +1,86 @@
+/* 全局样式与主题变量 */
 page {
+  --brand: #d4875a;
+  --dark: #1a2330;
+  --text: #303133;
+  --muted: #909399;
+  --line: #ebeef5;
   background: #f5f6f8;
+  color: var(--text);
   font-size: 28rpx;
-  color: #333;
+  line-height: 1.6;
 }
 
 .card {
   background: #fff;
   border-radius: 16rpx;
-  padding: 24rpx;
-  margin: 20rpx;
+  padding: 28rpx;
+  margin: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(26, 35, 48, 0.04);
 }
 
-.btn-primary {
-  background: #d4875a;
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.muted { color: var(--muted); font-size: 24rpx; }
+.brand { color: var(--brand); }
+.bold { font-weight: 600; }
+
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.tip {
+  color: var(--muted);
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  line-height: 36rpx;
+}
+.tag-info { background: #f0f2f5; color: #606266; }
+.tag-warn { background: #fdf6ec; color: #e6a23c; }
+.tag-danger { background: #fef0f0; color: #f56c6c; }
+.tag-success { background: #f0f9eb; color: #67c23a; }
+.tag-primary { background: #ecf5ff; color: #409eff; }
+
+.btn {
+  background: var(--brand);
   color: #fff;
   border-radius: 12rpx;
+  font-size: 30rpx;
+  padding: 20rpx 0;
+  text-align: center;
+}
+.btn-ghost {
+  background: #fff;
+  color: var(--brand);
+  border: 1rpx solid var(--brand);
 }
 
-.form-label {
-  display: block;
-  margin: 20rpx 0 8rpx;
-  color: #606266;
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  background: #fff;
+  border-bottom: 1rpx solid var(--line);
+}
+.cell:last-child { border-bottom: none; }
+
+.empty {
+  text-align: center;
+  color: var(--muted);
   font-size: 26rpx;
-}
-
-.form-input {
-  background: #f5f6f8;
-  border-radius: 10rpx;
-  padding: 16rpx 20rpx;
+  padding: 80rpx 0;
 }
