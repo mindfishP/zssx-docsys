@@ -1,0 +1,5 @@
+<view class="wrap">
+  <view class="title">中山商协会档案填报</view>
+  <view class="sub">微信小程序填报端（SRS 2.2）</view>
+  <button class="btn-primary" bindtap="onWxLogin">微信一键登录</button>
+</view>

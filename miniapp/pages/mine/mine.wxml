@@ -1,0 +1,6 @@
+<view class="card" wx:if="{{user}}">
+  <view class="name">{{user.realName}}</view>
+  <view class="meta">账号：{{user.username}}</view>
+  <view class="meta">协会：{{user.assocCode || '—'}}</view>
+</view>
+<button class="logout" bindtap="logout">退出登录</button>

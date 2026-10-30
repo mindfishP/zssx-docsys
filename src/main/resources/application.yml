@@ -1,0 +1,53 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: associationWechatApply
+  # Secrets (DB password, JWT key, WeChat keys) live in .env at the project root; the file is git-ignored.
+  config:
+    import: optional:file:./.env[.properties]
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "${ZSSX_DB_URL:jdbc:mysql://localhost:3306/association_archive?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}"
+    username: ${ZSSX_DB_USERNAME:root}
+    password: ${ZSSX_DB_PASSWORD:}
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+zssx:
+  jwt:
+    # Base64-encoded HS256 key (>= 32 bytes). Override via ZSSX_JWT_SECRET in .env.
+    secret: ${ZSSX_JWT_SECRET:ZGV2LW9ubHktc2VjcmV0LWNoYW5nZS1tZS0zMmJ5dGVzISE=}
+    expire-minutes: ${ZSSX_JWT_EXPIRE_MINUTES:720}
+  storage:
+    # Root directory for legacy disk attachments; new uploads are stored in the database.
+    root: "${ZSSX_STORAGE_ROOT:D:/zssx-archive-files}"
+    url-expire-minutes: ${ZSSX_URL_EXPIRE_MINUTES:30}
+  wechat:
+    appid: ${ZSSX_WECHAT_APPID:wx0000000000000000}
+    secret: ${ZSSX_WECHAT_SECRET:}
+  cors:
+    # Allowed front-end origins, comma separated. Override via ZSSX_CORS_ORIGINS.
+    allowed-origins: ${ZSSX_CORS_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+
+logging:
+  level:
+    com.wechatapply.associationwechatapply: debug
+

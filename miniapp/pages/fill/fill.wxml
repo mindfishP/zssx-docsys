@@ -1,0 +1,31 @@
+<view class="card">
+  <view class="section-title">六大类档案填报</view>
+
+  <picker mode="selector" range="{{majors}}" value="{{majorIndex}}" bindchange="onPickMajor">
+    <view class="form-label">档案大类</view>
+    <view class="form-input">{{majorIndex >= 0 ? majors[majorIndex] : '请选择'}}</view>
+  </picker>
+
+  <view class="form-label">题名</view>
+  <input class="form-input" value="{{form.title}}" data-k="title" bindinput="onInput" placeholder="如 2026 年理事会会议纪要" />
+
+  <view class="form-label">年度</view>
+  <input class="form-input" type="number" value="{{form.archiveYear}}" data-k="archiveYear" bindinput="onInput" placeholder="2026" />
+
+  <view class="form-label">责任者</view>
+  <input class="form-input" value="{{form.responsibility}}" data-k="responsibility" bindinput="onInput" />
+
+  <view class="form-label">附件（拍照或选择图片，自动登记哈希）</view>
+  <view class="files">
+    <view wx:for="{{files}}" wx:key="*this" class="file" data-i="{{index}}" bindtap="removeFile">
+      <image src="{{item}}" mode="aspectFill" />
+      <text class="del">点按移除</text>
+    </view>
+    <view class="file add" bindtap="chooseImage">＋</view>
+  </view>
+
+  <view class="btns">
+    <button class="ghost" data-submit="0" bindtap="submit" disabled="{{submitting}}">存草稿</button>
+    <button class="btn-primary" data-submit="1" bindtap="submit" disabled="{{submitting}}">提交送审</button>
+  </view>
+</view>

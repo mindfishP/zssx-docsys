@@ -1,0 +1,31 @@
+page {
+  background: #f5f6f8;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin: 20rpx;
+}
+
+.btn-primary {
+  background: #d4875a;
+  color: #fff;
+  border-radius: 12rpx;
+}
+
+.form-label {
+  display: block;
+  margin: 20rpx 0 8rpx;
+  color: #606266;
+  font-size: 26rpx;
+}
+
+.form-input {
+  background: #f5f6f8;
+  border-radius: 10rpx;
+  padding: 16rpx 20rpx;
+}

@@ -1,0 +1,2 @@
+<view class="card" wx:if="{{pushes.length === 0}}">
+  <view class="empty">暂无

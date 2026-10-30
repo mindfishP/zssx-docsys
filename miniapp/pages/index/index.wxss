@@ -1,0 +1,7 @@
+.hello { font-size: 34rpx; font-weight: 700; }
+.sub { color: #909399; font-size: 24rpx; margin-top: 8rpx; }
+.section-title { font-weight: 700; margin-bottom: 16rpx; }
+.row { display: flex; justify-content: space-between; padding: 16rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.row .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .s { color: #d4875a; margin-left: 16rpx; }
+.empty { color: #c0c4cc; text-align: center; padding: 30rpx 0; }

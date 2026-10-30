@@ -1,0 +1,12 @@
+{
+  "appid": "wx0000000000000000",
+  "projectname": "association-miniapp",
+  "compileType": "miniprogram",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true
+  },
+  "libVersion": "3.0.0"
+}
