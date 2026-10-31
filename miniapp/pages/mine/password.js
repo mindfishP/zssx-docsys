@@ -14,8 +14,12 @@ Page({
       wx.showToast({ title: '请填写完整', icon: 'none' })
       return
     }
-    if (newPassword.length < 6) {
-      wx.showToast({ title: '新密码至少 6 位', icon: 'none' })
+    if (newPassword.length < 8) {
+      wx.showToast({ title: '新密码至少 8 位', icon: 'none' })
+      return
+    }
+    if (!/[A-Za-z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+      wx.showToast({ title: '需同时包含字母和数字', icon: 'none' })
       return
     }
     if (newPassword !== confirm) {

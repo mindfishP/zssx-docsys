@@ -20,7 +20,7 @@
       <view class="attach-name">{{index + 1}}. {{item.fileName}}</view>
       <view class="muted">{{item.sizeText}} · 点击查看</view>
     </view>
-    <view wx:if="{{borrowed}}" class="tip">借阅查阅中：可在线查看，不提供下载另存；到期自动归还。</view>
+    <view wx:if="{{borrowed}}" class="tip">借阅查阅中：仅可在线查看。</view>
   </view>
 
   <view class="card">
@@ -28,12 +28,20 @@
     <view wx:if="{{reviews.length === 0}}" class="empty">暂无审核记录</view>
     <view wx:for="{{reviews}}" wx:key="reviewId" class="review">
       <view class="row">
-        <text class="muted">{{item.nodeLevel === 2 ? '复审' : '初审'}}</text>
+        <text class="muted">{{item.nodeLevel === 2 ? '复审' : '初审'}} · {{item.reviewerName || '审核人'}}</text>
         <text class="tag {{item.reviewResult === 1 ? 'tag-success' : 'tag-danger'}}">{{item.reviewResult === 1 ? '通过' : '退回'}}</text>
       </view>
       <view class="review-text">{{item.reviewOpinion || '（无意见）'}}</view>
-      <view class="muted">{{item.reviewAt}}</view>
+      <view class="muted">{{item.timeText}}</view>
     </view>
+  </view>
+
+  <view class="footer" wx:if="{{canReview || canEdit}}">
+    <block wx:if="{{canReview}}">
+      <button class="btn ghost" bindtap="onReject">退回修改</button>
+      <button class="btn" bindtap="onPass">通过并归档</button>
+    </block>
+    <button wx:if="{{canEdit}}" class="btn" bindtap="goEdit">修改档案</button>
   </view>
 </view>
 <view wx:else class="empty">加载中…</view>

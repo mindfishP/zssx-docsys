@@ -22,9 +22,7 @@
       </el-descriptions>
 
       <h4 class="section">附件（{{ detail ? detail.attachments.length : 0 }}）</h4>
-      <div v-if="deletable && detail && detail.archive.status === 1" class="tip">
-        档案处于待审核状态，删除附件会立即更新送审材料并记入审计日志。
-      </div>
+
       <el-table :data="detail ? detail.attachments : []" border size="small" empty-text="暂无附件">
         <el-table-column prop="fileName" label="文件名" min-width="200" show-overflow-tooltip />
         <el-table-column label="大小" width="100">

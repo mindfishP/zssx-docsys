@@ -1,5 +1,5 @@
 {
-  "appid": "touristappid",
+  "appid": "wx195e8bdb663a472d",
   "projectname": "zssx-archive-miniapp",
   "compileType": "miniprogram",
   "miniprogramRoot": "./",
@@ -11,7 +11,28 @@
     "postcss": true,
     "minified": true,
     "packNpmManually": false,
-    "nodeModules": false
+    "nodeModules": false,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }

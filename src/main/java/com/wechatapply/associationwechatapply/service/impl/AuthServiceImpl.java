@@ -4,19 +4,21 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wechatapply.associationwechatapply.common.exception.BusinessException;
 import com.wechatapply.associationwechatapply.common.result.ResultCode;
 import com.wechatapply.associationwechatapply.common.util.JwtUtil;
+import com.wechatapply.associationwechatapply.common.util.PasswordPolicy;
 import com.wechatapply.associationwechatapply.dto.LoginRequest;
 import com.wechatapply.associationwechatapply.dto.RegisterRequest;
 import com.wechatapply.associationwechatapply.dto.WechatLoginRequest;
 import com.wechatapply.associationwechatapply.entity.SysInviteCode;
 import com.wechatapply.associationwechatapply.entity.SysUser;
+import com.wechatapply.associationwechatapply.framework.context.LoginContextHolder;
 import com.wechatapply.associationwechatapply.framework.context.LoginUser;
 import com.wechatapply.associationwechatapply.framework.context.RoleCode;
 import com.wechatapply.associationwechatapply.mapper.SysInviteCodeMapper;
 import com.wechatapply.associationwechatapply.mapper.SysUserMapper;
 import com.wechatapply.associationwechatapply.service.AuthService;
+import com.wechatapply.associationwechatapply.service.WechatGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,12 +36,8 @@ public class AuthServiceImpl implements AuthService {
     private final SysUserMapper userMapper;
     private final SysInviteCodeMapper inviteMapper;
     private final JwtUtil jwtUtil;
+    private final WechatGateway wechatGateway;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-    @Value("${zssx.wechat.appid}")
-    private String wxAppid;
-    @Value("${zssx.wechat.secret}")
-    private String wxSecret;
 
     private static final int MAX_FAIL = 5;
     private static final int LOCK_MINUTES = 15;
@@ -107,6 +105,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(ResultCode.INVITE_USED);
         }
 
+        PasswordPolicy.check(req.getPassword());
         SysUser user = new SysUser();
         user.setUsername(username);
         user.setPasswordHash(encoder.encode(req.getPassword()));
@@ -128,17 +127,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 小程序登录：正式实现需调用 https://api.weixin.qq.com/sns/jscode2session。
-     * 框架阶段以 dev-code 规则模拟（code 即 openid），保证联调链路先跑通；
-     * 接入真实 AppID 后仅需替换 fetchOpenid() 内部实现。
+     * 小程序微信登录：code 经 jscode2session 换取 openid，匹配已绑定的账号后签发 token。
+     * 未绑定、账号停用、微信参数未配置都会给出明确提示。
      */
     @Override
     public Map<String, Object> wechatLogin(WechatLoginRequest req) {
-        String openid = fetchOpenid(req.getCode());
+        String openid = wechatGateway.getOpenid(req.getCode());
         SysUser user = userMapper.selectOne(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getWxOpenid, openid));
         if (user == null) {
-            throw new BusinessException(ResultCode.WECHAT_LOGIN_FAILED, "该微信尚未绑定系统账号，请先在 Web 端绑定");
+            throw new BusinessException(ResultCode.WECHAT_LOGIN_FAILED,
+                    "该微信尚未绑定系统账号，请先用账号密码登录，在“我的”中绑定微信");
         }
         if (user.getStatus() == null || user.getStatus() != 1) {
             throw new BusinessException(ResultCode.USER_DISABLED);
@@ -176,12 +175,62 @@ public class AuthServiceImpl implements AuthService {
         userMapper.updateById(user);
     }
 
-    /** TODO: 替换为真实 jscode2session HTTP 调用。 */
-    private String fetchOpenid(String code) {
-        if (code == null || code.isBlank()) {
-            throw new BusinessException(ResultCode.WECHAT_LOGIN_FAILED);
+    /**
+     * 绑定微信：当前登录账号 + wx.login 的 code → 换取 openid 后写入 sys_user.wx_openid。
+     * 一个微信只能绑定一个账号；重复绑定同一微信视为幂等成功。
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void bindWechat(String code) {
+        Long userId = LoginContextHolder.getUserId();
+        SysUser current = userId == null ? null : userMapper.selectById(userId);
+        if (current == null) {
+            throw new BusinessException(ResultCode.UNAUTHORIZED);
         }
-        // 框架阶段：code 直接作为 openid，便于本地联调
-        return "mock-openid-" + code;
+        String openid = wechatGateway.getOpenid(code);
+        SysUser other = userMapper.selectOne(Wrappers.<SysUser>lambdaQuery()
+                .eq(SysUser::getWxOpenid, openid));
+        if (other != null && !other.getId().equals(userId)) {
+            throw new BusinessException(ResultCode.BAD_REQUEST,
+                    "该微信已绑定其他账号（" + maskUsername(other.getUsername()) + "），请先解绑");
+        }
+        current.setWxOpenid(openid);
+        try {
+            userMapper.updateById(current);
+        } catch (DuplicateKeyException e) {
+            throw new BusinessException(ResultCode.BAD_REQUEST, "该微信已被其他账号绑定");
+        }
+    }
+
+    /** 解绑微信：清空当前账号的 openid，之后不能用微信一键登录 */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void unbindWechat() {
+        Long userId = LoginContextHolder.getUserId();
+        if (userId == null) {
+            throw new BusinessException(ResultCode.UNAUTHORIZED);
+        }
+        // updateById 会忽略 null 字段，这里必须用 set 显式置空
+        userMapper.update(null, Wrappers.<SysUser>lambdaUpdate()
+                .eq(SysUser::getId, userId)
+                .set(SysUser::getWxOpenid, null));
+    }
+
+    /** 当前账号是否已绑定微信 */
+    @Override
+    public boolean wechatBound() {
+        Long userId = LoginContextHolder.getUserId();
+        SysUser user = userId == null ? null : userMapper.selectById(userId);
+        return user != null && user.getWxOpenid() != null && !user.getWxOpenid().isBlank();
+    }
+
+    private String maskUsername(String username) {
+        if (username == null || username.isBlank()) {
+            return "未知账号";
+        }
+        if (username.length() <= 2) {
+            return username.charAt(0) + "*";
+        }
+        return username.charAt(0) + "***" + username.charAt(username.length() - 1);
     }
 }

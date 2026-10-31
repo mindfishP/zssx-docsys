@@ -40,7 +40,7 @@
         <template #header>
           <div class="card-head">
             <span>成员账号（{{ users.length }}）</span>
-            <span class="tip">该协会下可登录系统填报与查询档案的账号</span>
+
           </div>
         </template>
         <el-empty v-if="!users.length" description="该协会暂无账号" :image-size="80" />

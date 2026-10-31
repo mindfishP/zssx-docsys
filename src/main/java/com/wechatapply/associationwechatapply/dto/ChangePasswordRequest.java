@@ -14,6 +14,6 @@ public class ChangePasswordRequest {
     private String oldPassword;
 
     @NotBlank(message = "请输入新密码")
-    @Size(min = 6, max = 32, message = "新密码长度需为 6-32 位")
+    @Size(min = 8, max = 32, message = "新密码长度需为 8-32 位")
     private String newPassword;
 }

@@ -36,6 +36,8 @@ public enum ResultCode {
     BORROW_NOT_ALLOWED(5001, "该档案不可借阅"),
     BORROW_STATUS_INVALID(5002, "借阅记录状态不允许该操作"),
 
+    TOO_MANY_REQUESTS(429, "请求过于频繁，请稍后再试"),
+
     SYSTEM_ERROR(9999, "系统内部错误");
 
     private final int code;

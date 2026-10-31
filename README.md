@@ -58,6 +58,16 @@ associationWechatApply/
 - 返回回执：总行数、成功数、失败数与逐行失败原因（行号与 Excel 行号一致），单次上限 500 行；
 - 实现只用 JDK 自带的 ZIP + XML 解析（`SimpleXlsx`），不引入 POI 等额外依赖。
 
+## 微信登录与绑定
+
+- **绑定**：小程序「我的」→「微信绑定」，调用 `POST /api/auth/wechat/bind`（需登录），
+  body `{ code }`（`wx.login()` 获取），后端经 `jscode2session` 换 openid 写入 `sys_user.wx_openid`；
+- **解绑**：`POST /api/auth/wechat/unbind`；**状态**：`GET /api/auth/wechat/status` 返回 `{ bound }`；
+- **一键登录**：`POST /api/auth/wechat-login`，openid 已绑定则签发 token，未绑定提示先绑定；
+- **配置**：`.env` 中填写 `ZSSX_WECHAT_APPID`、`ZSSX_WECHAT_SECRET`；仍是占位值时会返回
+  「未配置微信小程序 AppID/Secret」，不会静默失败；游客模式 AppID 无法换取真实 openid；
+- 一个微信只能绑定一个账号，绑定/解绑均写入审计日志。
+
 ## 安全配置（重要）
 
 - **敏感项统一放 `.env`**：项目根目录的 `.env` 由 `application.yml` 通过
@@ -71,6 +81,24 @@ associationWechatApply/
 - **跨域**：默认只放行 `http://localhost:5173` 与 `http://127.0.0.1:5173`，部署时用 `ZSSX_CORS_ORIGINS` 指定实际域名。
 - **鉴权**：除 `/api/auth/login`、`/api/auth/register`、`/api/auth/wechat-login` 外，所有接口都要求 JWT；
   管理类接口用 `@RequireRole` 限定角色，数据范围（本会/全局）在服务层按 `assocCode` 隔离，不依赖前端隐藏按钮。
+
+## 安全加固清单（本轮）
+
+| 措施 | 说明 |
+|---|---|
+| 口令强度 | 注册与改密要求 8-32 位且同时包含字母和数字（`PasswordPolicy`，登录不校验以免影响存量账号） |
+| 登录限流 | `/api/auth/**` 同一来源 60 秒内最多 30 次，超过返回 429；仅当直连方是本机（Nginx）时才信任 `X-Forwarded-For` |
+| 账号即时失效 | JWT 拦截器每次请求校验账号状态，停用/删除后旧 token 立即 401，不必等过期 |
+| 字段白名单 | 协会信息更新只接受允许字段，信用代码、活跃度、创建时间等系统字段不可被外部覆盖；登记信息与状态仅主管部门可改 |
+| 安全响应头 | `X-Content-Type-Options: nosniff`、`X-Frame-Options: DENY`、`Referrer-Policy: no-referrer`、`Permissions-Policy`，HTTPS 下附 HSTS |
+| 附件防护 | 下载与查阅均 `no-store` + `nosniff`，签名与登录用户绑定，借阅到期自动收回 |
+| 越权防护 | 角色注解 + 服务层 `assocCode` 行级隔离；`/association/all` 对协会角色脱敏 |
+
+### 检索与报表
+
+- 档案关键词现在同时匹配**题名、责任者、附件文件名**（`/api/archive/page?keyword=`）；
+- 新增 `GET /api/stats/export`（主管部门/主管领导）导出协会活跃度报表 xlsx，Web 看板右上角「导出报表」；
+- 借阅记录的「应还时间」统一改为**「自动归还时间」**，与到期自动归还逻辑一致。
 
 ## 接口约定（SRS 7.1）
 

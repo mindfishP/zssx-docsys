@@ -1,11 +1,23 @@
 const api = require('../../utils/api')
 const auth = require('../../utils/auth')
+const config = require('../../config')
 
 Page({
   data: {
     username: '',
     password: '',
-    loading: false
+    loading: false,
+    baseUrl: ''
+  },
+
+  onShow() {
+    this.setData({ baseUrl: config.getBaseUrl() })
+  },
+
+  /** 真机调试时改成电脑局域网 IP */
+  async editServer() {
+    const url = await config.promptBaseUrl()
+    this.setData({ baseUrl: url })
   },
 
   onUsername(e) {
@@ -46,9 +58,10 @@ Page({
           auth.setAuth(data)
           wx.reLaunch({ url: '/pages/index/index' })
         } catch (e) {
-          wx.showToast({ title: '该微信尚未绑定账号，请先用账号登录', icon: 'none' })
+          // 具体原因（未绑定 / 未配置 AppID / 微信接口报错）已由 request 统一提示
         }
-      }
+      },
+      fail: () => wx.showToast({ title: '微信登录不可用', icon: 'none' })
     })
   }
 })

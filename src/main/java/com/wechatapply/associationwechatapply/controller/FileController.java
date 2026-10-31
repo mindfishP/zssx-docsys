@@ -94,6 +94,7 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(file.contentType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename*=UTF-8''" + encodedName)
                 .header(HttpHeaders.CACHE_CONTROL, "no-store")
+                .header("X-Content-Type-Options", "nosniff")
                 .body(file.resource());
     }
 

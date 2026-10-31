@@ -1,6 +1,7 @@
 package com.wechatapply.associationwechatapply.config;
 
 import com.wechatapply.associationwechatapply.framework.interceptor.JwtInterceptor;
+import com.wechatapply.associationwechatapply.framework.interceptor.RateLimitInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final JwtInterceptor jwtInterceptor;
+    private final RateLimitInterceptor rateLimitInterceptor;
 
     /** 允许的前端来源，逗号分隔；默认只放行本地 dev server */
     @Value("${zssx.cors.allowed-origins:http://localhost:5173,http://127.0.0.1:5173}")
@@ -32,6 +34,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 登录/注册类接口限流，先于鉴权执行
+        registry.addInterceptor(rateLimitInterceptor)
+                .addPathPatterns("/api/auth/**")
+                .order(0);
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns(

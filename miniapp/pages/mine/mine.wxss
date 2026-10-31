@@ -6,3 +6,4 @@
 .info .name { color: #fff; font-size: 34rpx; font-weight: 600; }
 .info .muted { color: #8b98a8; }
 .list { padding: 0; }
+.bound { color: #67c23a; }

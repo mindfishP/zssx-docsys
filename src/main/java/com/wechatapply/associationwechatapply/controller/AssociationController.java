@@ -88,13 +88,28 @@ public class AssociationController {
     @RequireRole({RoleCode.ADMIN, RoleCode.ASSOC})
     @AuditLog(action = "维护商协会信息")
     public R<Void> update(@PathVariable String assocCode, @RequestBody BizAssociation assoc) {
-        assoc.setAssocCode(assocCode);
         // 行级隔离：协会角色禁止改他协会（SRS 4.2 规则 1）
         String own = LoginContextHolder.getAssocCode();
         if (own != null && !own.equals(assocCode)) {
             return R.fail(403, "仅可维护本协会信息");
         }
-        assocMapper.updateById(assoc);
+        if (assocMapper.selectById(assocCode) == null) {
+            throw new BusinessException(ResultCode.BAD_REQUEST, "协会不存在");
+        }
+        // 字段白名单：信用代码、活跃度、创建时间等由系统维护，不接受外部提交；
+        // 登记信息与状态仅主管部门可改（SRS FR-02 权限矩阵）
+        BizAssociation update = new BizAssociation();
+        update.setAssocCode(assocCode);
+        update.setAssocName(assoc.getAssocName());
+        update.setIndustryType(assoc.getIndustryType());
+        update.setLegalPerson(assoc.getLegalPerson());
+        update.setContactPhone(assoc.getContactPhone());
+        if (own == null) {
+            update.setRegisterOrg(assoc.getRegisterOrg());
+            update.setRegisterDate(assoc.getRegisterDate());
+            update.setStatus(assoc.getStatus());
+        }
+        assocMapper.updateById(update);
         return R.ok();
     }
 

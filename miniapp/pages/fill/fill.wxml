@@ -1,31 +1,82 @@
-<view class="card">
-  <view class="section-title">六大类档案填报</view>
+<view class="page">
+  <view class="card">
+    <view class="title">{{editing ? '修改档案' : '填写档案信息'}}</view>
 
-  <picker mode="selector" range="{{majors}}" value="{{majorIndex}}" bindchange="onPickMajor">
-    <view class="form-label">档案大类</view>
-    <view class="form-input">{{majorIndex >= 0 ? majors[majorIndex] : '请选择'}}</view>
-  </picker>
-
-  <view class="form-label">题名</view>
-  <input class="form-input" value="{{form.title}}" data-k="title" bindinput="onInput" placeholder="如 2026 年理事会会议纪要" />
-
-  <view class="form-label">年度</view>
-  <input class="form-input" type="number" value="{{form.archiveYear}}" data-k="archiveYear" bindinput="onInput" placeholder="2026" />
-
-  <view class="form-label">责任者</view>
-  <input class="form-input" value="{{form.responsibility}}" data-k="responsibility" bindinput="onInput" />
-
-  <view class="form-label">附件（拍照或选择图片，自动登记哈希）</view>
-  <view class="files">
-    <view wx:for="{{files}}" wx:key="*this" class="file" data-i="{{index}}" bindtap="removeFile">
-      <image src="{{item}}" mode="aspectFill" />
-      <text class="del">点按移除</text>
+    <view class="field">
+      <view class="label">档案大类 <text class="req">*</text></view>
+      <picker mode="selector" range="{{majorLabels}}" value="{{majorIndex}}" bindchange="onMajorChange">
+        <view class="input-box picker-box">
+          <text wx:if="{{majorIndex >= 0}}">{{majorLabels[majorIndex]}}</text>
+          <text wx:else class="placeholder">请选择档案大类</text>
+          <text class="arrow">›</text>
+        </view>
+      </picker>
     </view>
-    <view class="file add" bindtap="chooseImage">＋</view>
+
+    <view class="field" wx:if="{{categoryOptions.length > 0}}">
+      <view class="label">档案中类 <text class="req">*</text></view>
+      <picker mode="selector" range="{{categoryOptions}}" range-key="label" value="{{categoryIndex}}" bindchange="onCategoryChange">
+        <view class="input-box picker-box">
+          <text wx:if="{{categoryIndex >= 0}}">{{categoryOptions[categoryIndex].label}}</text>
+          <text wx:else class="placeholder">请选择具体分类</text>
+          <text class="arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="label">题名 <text class="req">*</text></view>
+      <input class="input-box" value="{{form.title}}" data-k="title" bindinput="onInput"
+        placeholder="请输入题名" maxlength="200" />
+    </view>
+
+    <view class="field">
+      <view class="label">年度 <text class="req">*</text></view>
+      <input class="input-box" type="number" value="{{form.archiveYear}}" data-k="archiveYear"
+        bindinput="onInput" placeholder="请输入年度" maxlength="4" />
+    </view>
+
+    <view class="field">
+      <view class="label">责任者</view>
+      <input class="input-box" value="{{form.responsibility}}" data-k="responsibility"
+        bindinput="onInput" placeholder="请输入责任者" maxlength="64" />
+    </view>
+
+    <view class="field">
+      <view class="label">密级</view>
+      <radio-group class="radio-row" bindchange="onLevelChange">
+        <label class="radio-item"><radio value="1" checked="{{form.securityLevel === 1}}" color="#d4875a" />公开</label>
+        <label class="radio-item"><radio value="2" checked="{{form.securityLevel === 2}}" color="#d4875a" />内部</label>
+      </radio-group>
+    </view>
+
+    <view class="field">
+      <view class="label">保管期限</view>
+      <picker mode="selector" range="{{retentions}}" value="{{retentionIndex}}" bindchange="onRetentionChange">
+        <view class="input-box picker-box">
+          <text wx:if="{{retentionIndex >= 0}}">{{retentions[retentionIndex]}}</text>
+          <text wx:else class="placeholder">请选择保管期限</text>
+          <text class="arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="label">附件</view>
+      <view class="attach-actions">
+        <view class="attach-btn" bindtap="chooseMedia">拍照/相册</view>
+        <view class="attach-btn" bindtap="chooseFile">选择文件</view>
+      </view>
+
+      <view wx:for="{{files}}" wx:key="attachId" class="file-row">
+        <text class="file-name">{{index + 1}}. {{item.fileName}}</text>
+        <text class="file-del" data-index="{{index}}" bindtap="removeFile">删除</text>
+      </view>
+    </view>
   </view>
 
-  <view class="btns">
-    <button class="ghost" data-submit="0" bindtap="submit" disabled="{{submitting}}">存草稿</button>
-    <button class="btn-primary" data-submit="1" bindtap="submit" disabled="{{submitting}}">提交送审</button>
+  <view class="footer">
+    <button class="btn ghost" data-submit="false" loading="{{submitting}}" bindtap="onSubmit">存草稿</button>
+    <button class="btn" data-submit="true" loading="{{submitting}}" bindtap="onSubmit">提交送审</button>
   </view>
 </view>

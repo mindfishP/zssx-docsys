@@ -17,7 +17,7 @@
       <el-select v-model="q.securityLevel" placeholder="密级" clearable style="width: 110px">
         <el-option label="公开" :value="1" /><el-option label="内部" :value="2" />
       </el-select>
-      <el-input v-model="q.keyword" placeholder="题名关键词" clearable style="width: 200px" @keyup.enter="load" />
+      <el-input v-model="q.keyword" placeholder="题名/责任者/附件名" clearable style="width: 200px" @keyup.enter="load" />
       <el-button type="primary" @click="load">查询</el-button>
       <el-button v-if="user.isAssoc" type="success" @click="goFill">填报档案</el-button>
       <el-button v-if="user.isAssoc" @click="openImport">批量导入</el-button>
@@ -54,15 +54,14 @@
 
     <!-- 批量导入（SRS FR-04-04）：模板下载 + 逐行校验回执 -->
     <el-dialog v-model="importDialog" title="批量导入档案" width="620px">
-      <el-alert type="info" :closable="false" style="margin-bottom: 12px"
-        title="请使用「下载模板」得到的 xlsx：分类编码需存在于六大类分类（如 C01）；密级填 公开/内部；保管期限填 永久/定期30年/定期10年。" />
+
       <el-radio-group v-model="importSubmit" style="margin-bottom: 12px">
         <el-radio-button :value="false">存草稿</el-radio-button>
         <el-radio-button :value="true">提交送审</el-radio-button>
       </el-radio-group>
       <div class="import-file">
         <input type="file" accept=".xlsx" @change="onImportFile" />
-        <span class="tip">选择填写好的 .xlsx 文件</span>
+
       </div>
       <div v-if="importResult" class="receipt">
         <el-alert :type="importResult.failed ? 'warning' : 'success'" :closable="false"

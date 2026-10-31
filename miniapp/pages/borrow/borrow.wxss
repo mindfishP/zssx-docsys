@@ -5,3 +5,6 @@
 .item { background: #fff; margin: 20rpx 24rpx; border-radius: 16rpx; padding: 28rpx; }
 .item-title { flex: 1; font-size: 28rpx; font-weight: 600; margin-right: 16rpx; }
 .btn.small { margin-top: 20rpx; font-size: 26rpx; padding: 14rpx 0; }
+.actions { display: flex; gap: 20rpx; margin-top: 8rpx; }
+.actions .btn { flex: 1; }
+.btn.ghost { background: #fff; color: #f56c6c; border: 1rpx solid #f56c6c; }

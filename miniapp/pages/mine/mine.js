@@ -4,7 +4,7 @@ const auth = require('../../utils/auth')
 const ROLES = { ADMIN: '主管部门操作员', LEADER: '主管领导', ASSOC: '商协会管理员' }
 
 Page({
-  data: { user: null, roleText: '', initial: '—' },
+  data: { user: null, roleText: '', initial: '—', wechatBound: false },
 
   onShow() {
     if (!auth.ensureLogin()) return
@@ -15,6 +15,54 @@ Page({
       initial: (user.realName || user.username || '?').slice(0, 1)
     })
     this.refreshMe()
+    this.loadWechatStatus()
+  },
+
+
+  async loadWechatStatus() {
+    try {
+      const data = await api.wechatStatus()
+      this.setData({ wechatBound: !!(data && data.bound) })
+    } catch (e) {
+      // 未登录时忽略
+    }
+  },
+
+  /** 已绑定则确认解绑；未绑定则 wx.login 换取 code 后绑定 */
+  toggleWechat() {
+    if (this.data.wechatBound) {
+      wx.showModal({
+        title: '解绑微信',
+        content: '解绑后该微信将无法一键登录本账号，可用账号密码重新绑定。',
+        success: async (res) => {
+          if (!res.confirm) return
+          try {
+            await api.wechatUnbind()
+            this.setData({ wechatBound: false })
+            wx.showToast({ title: '已解绑', icon: 'success' })
+          } catch (e) {
+            // 统一提示
+          }
+        }
+      })
+      return
+    }
+    wx.login({
+      success: async (res) => {
+        if (!res.code) {
+          wx.showToast({ title: '获取微信 code 失败', icon: 'none' })
+          return
+        }
+        try {
+          await api.wechatBind({ code: res.code })
+          this.setData({ wechatBound: true })
+          wx.showToast({ title: '绑定成功', icon: 'success' })
+        } catch (e) {
+          // 错误信息由 request 统一提示（如未配置 AppID、已被其他账号绑定）
+        }
+      },
+      fail: () => wx.showToast({ title: '微信登录不可用', icon: 'none' })
+    })
   },
 
   async refreshMe() {

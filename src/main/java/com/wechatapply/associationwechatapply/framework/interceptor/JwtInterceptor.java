@@ -6,6 +6,8 @@ import com.wechatapply.associationwechatapply.common.util.JwtUtil;
 import com.wechatapply.associationwechatapply.framework.annotation.RequireRole;
 import com.wechatapply.associationwechatapply.framework.context.LoginContextHolder;
 import com.wechatapply.associationwechatapply.framework.context.LoginUser;
+import com.wechatapply.associationwechatapply.entity.SysUser;
+import com.wechatapply.associationwechatapply.mapper.SysUserMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +29,7 @@ import java.util.Arrays;
 public class JwtInterceptor implements HandlerInterceptor {
 
     private final JwtUtil jwtUtil;
+    private final SysUserMapper userMapper;
 
 
     @Override
@@ -49,6 +52,11 @@ public class JwtInterceptor implements HandlerInterceptor {
                 claims.get("role", String.class),
                 claims.get("assoc", String.class)
         );
+        // 账号被停用或删除后，旧 token 立即失效（不依赖 token 过期）
+        SysUser dbUser = userMapper.selectById(user.getUserId());
+        if (dbUser == null || dbUser.getStatus() == null || dbUser.getStatus() != 1) {
+            throw new BusinessException(ResultCode.UNAUTHORIZED, "账号已被停用或删除，请重新联系管理员");
+        }
         LoginContextHolder.set(user);
 
         RequireRole rr = hm.getMethodAnnotation(RequireRole.class);

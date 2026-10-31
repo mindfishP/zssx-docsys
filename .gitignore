@@ -42,3 +42,6 @@ application-local.yml
 zssx-archive-files/
 .DS_Store
 Thumbs.db
+
+### 微信开发者工具本地配置 ###
+project.private.config.json

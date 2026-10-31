@@ -38,7 +38,7 @@
 
     <el-dialog v-model="dialog" :title="pass ? '确认通过并归档' : '退回修改'" width="460px">
       <el-input v-model="opinion" type="textarea" :rows="4"
-        :placeholder="pass ? '审核意见（可选）' : '退回原因（必填，SRS UC-06）'" />
+        :placeholder="pass ? '审核意见（可选）' : '退回原因（必填）'" />
       <template #footer>
         <el-button @click="dialog = false">取消</el-button>
         <el-button :type="pass ? 'success' : 'danger'" :loading="saving" @click="submitReview">确认</el-button>

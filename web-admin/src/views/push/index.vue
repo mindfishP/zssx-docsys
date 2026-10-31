@@ -52,7 +52,7 @@
             <el-option v-for="a in associations" :key="a.assocCode"
               :label="`${a.assocName}（${a.assocCode}）`" :value="a.assocCode" />
           </el-select>
-          <div class="tip">已选 {{ form.targets.length }} 家，数量不设上限</div>
+          <div class="tip">已选 {{ form.targets.length }} 家</div>
         </el-form-item>
 
         <el-form-item v-else-if="form.targetScope === 'INDUSTRY'" label="行业类别">
@@ -60,7 +60,7 @@
             placeholder="选择或输入行业类别，如 灯饰" style="width: 100%">
             <el-option v-for="t in industries" :key="t" :label="t" :value="t" />
           </el-select>
-          <div class="tip">该行业类别下的协会都会收到，可多选</div>
+
         </el-form-item>
 
         <el-form-item v-else-if="form.targetScope === 'LEVEL'" label="活跃度分档">
@@ -69,7 +69,7 @@
             <el-option label="成长型" value="2" />
             <el-option label="休眠型" value="3" />
           </el-select>
-          <div class="tip">对应活跃度评估结果，可多选</div>
+
         </el-form-item>
 
         <el-form-item label="正文">

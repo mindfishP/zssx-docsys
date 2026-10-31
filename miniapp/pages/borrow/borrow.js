@@ -5,13 +5,25 @@ const fmt = require('../../utils/format')
 Page({
   data: {
     tab: 'available',
+    isAssoc: false,
+    isAdmin: false,
     available: [],
     records: [],
+    recordsLabel: '借阅记录',
     loading: false
   },
 
   onShow() {
     if (!auth.ensureLogin()) return
+    const isAssoc = auth.isAssoc()
+    const isAdmin = auth.isAdmin()
+    this.setData({
+      isAssoc,
+      isAdmin,
+      tab: isAssoc ? 'available' : 'records',
+      recordsLabel: isAssoc ? '本协会借阅记录' : '借阅记录'
+    })
+    wx.setNavigationBarTitle({ title: isAssoc ? '档案借阅' : '借阅管理' })
     this.load()
   },
 
@@ -69,6 +81,67 @@ Page({
         try {
           await api.borrowApply({ bizId: Number(bizId), reason, dueAt })
           wx.showToast({ title: '已提交，等待审批', icon: 'success' })
+          this.load()
+        } catch (err) {
+          // 统一提示
+        }
+      }
+    })
+  },
+
+  approve(e) {
+    const borrowId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '审批通过',
+      editable: true,
+      placeholderText: '审批意见（可留空）',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.borrowApprove({ borrowId: Number(borrowId), pass: true, opinion: (res.content || '').trim() })
+          wx.showToast({ title: '已通过', icon: 'success' })
+          this.load()
+        } catch (err) {
+          // 统一提示
+        }
+      }
+    })
+  },
+
+  reject(e) {
+    const borrowId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '拒绝申请',
+      editable: true,
+      placeholderText: '请填写拒绝原因',
+      success: async (res) => {
+        if (!res.confirm) return
+        const opinion = (res.content || '').trim()
+        if (!opinion) {
+          wx.showToast({ title: '拒绝需填写原因', icon: 'none' })
+          return
+        }
+        try {
+          await api.borrowApprove({ borrowId: Number(borrowId), pass: false, opinion })
+          wx.showToast({ title: '已拒绝', icon: 'success' })
+          this.load()
+        } catch (err) {
+          // 统一提示
+        }
+      }
+    })
+  },
+
+  returnBack(e) {
+    const borrowId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '登记归还',
+      content: '确认已归还该档案？归还后查阅权限立即收回。',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.borrowReturn(Number(borrowId))
+          wx.showToast({ title: '已登记归还', icon: 'success' })
           this.load()
         } catch (err) {
           // 统一提示

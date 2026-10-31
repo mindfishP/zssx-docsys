@@ -86,6 +86,14 @@ export const getPushDetail = (pushId) => request.get(`/push/${pushId}`)
 export const dashboard = () => request.get('/stats/dashboard')
 export const activityList = () => request.get('/stats/activity')
 export const evaluateActivity = () => request.post('/stats/activity/evaluate')
+export const exportActivity = async () => {
+  const token = localStorage.getItem('token')
+  const res = await axios.get('/api/stats/export', {
+    responseType: 'blob',
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  })
+  return res.data
+}
 
 // 审计日志
 export const pageAuditLog = (params) => request.get('/audit-log/page', { params })

@@ -1,0 +1,11 @@
+<view class="page">
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">暂无专项补录任务</view>
+  <view wx:for="{{list}}" wx:key="taskCode" class="item" data-code="{{item.taskCode}}" bindtap="openDetail">
+    <view class="row">
+      <view class="item-title">{{item.taskName}}</view>
+      <text class="tag {{item.statusCls}}">{{item.statusText}}</text>
+    </view>
+    <view class="muted">编号：{{item.taskCode}}　涉及大类：{{item.majorCodes || '不限'}}</view>
+    <view class="muted">{{item.rangeText}}</view>
+  </view>
+</view>

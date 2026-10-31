@@ -28,16 +28,16 @@
 
         <el-form-item label="题名" :required="isRequired('title')">
           <el-input v-model="form.title" maxlength="200" show-word-limit
-            placeholder="如 2026 年度会员名册" />
+            placeholder="请输入题名" />
         </el-form-item>
 
         <el-form-item label="年度" :required="isRequired('archiveYear')">
-          <el-input v-model="form.archiveYear" maxlength="4" style="width: 140px" placeholder="如 2026" />
-          <span class="tip">4 位年份，默认当前年</span>
+          <el-input v-model="form.archiveYear" maxlength="4" style="width: 140px" placeholder="请输入年度" />
+
         </el-form-item>
 
         <el-form-item label="责任者" :required="isRequired('responsibility')">
-          <el-input v-model="form.responsibility" maxlength="64" placeholder="形成该材料的部门或个人" />
+          <el-input v-model="form.responsibility" maxlength="64" placeholder="请输入责任者" />
         </el-form-item>
 
         <el-form-item label="密级">
@@ -45,7 +45,7 @@
             <el-radio :value="1">公开</el-radio>
             <el-radio :value="2">内部</el-radio>
           </el-radio-group>
-          <span class="tip">默认取所选分类；“内部”档案不对其他协会开放借阅</span>
+
         </el-form-item>
 
         <el-form-item label="保管期限">
@@ -59,9 +59,6 @@
         <el-form-item label="附件">
           <div class="attach-box">
             <input type="file" multiple @change="onFiles" />
-            <div class="tip">
-              支持 PDF、Office 文档、图片与压缩包，单文件不超过 60MB；
-            </div>
             <el-table v-if="attachments.length" :data="attachments" border size="small" class="attach-table">
               <el-table-column prop="fileName" label="文件名" min-width="240" show-overflow-tooltip />
               <el-table-column label="大小" width="100">

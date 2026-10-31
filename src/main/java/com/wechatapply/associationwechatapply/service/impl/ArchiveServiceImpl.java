@@ -63,7 +63,13 @@ public class ArchiveServiceImpl implements ArchiveService {
                 .eq(own == null && StringUtils.isNotBlank(assocCode), BizArchive::getAssocCode, assocCode)
                 .and(w -> w.ne(BizArchive::getStatus, ST_DRAFT)
                         .or().eq(BizArchive::getCreateBy, me))
-                .like(keyword != null && !keyword.isBlank(), BizArchive::getTitle, keyword)
+                // 关键词同时匹配题名、责任者与附件文件名（SRS FR-07-01 / FR-07-02）
+                .and(keyword != null && !keyword.isBlank(), w -> w
+                        .like(BizArchive::getTitle, keyword)
+                        .or().like(BizArchive::getResponsibility, keyword)
+                        .or().apply("exists (select 1 from biz_attachment a "
+                                + "where a.biz_id = biz_archive.biz_id and a.deleted = 0 "
+                                + "and a.file_name like concat('%', {0}, '%'))", keyword))
                 .orderByDesc(BizArchive::getBizId));
     }
 

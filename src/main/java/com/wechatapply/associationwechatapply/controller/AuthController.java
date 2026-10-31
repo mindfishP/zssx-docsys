@@ -3,9 +3,13 @@ package com.wechatapply.associationwechatapply.controller;
 import com.wechatapply.associationwechatapply.common.result.R;
 import com.wechatapply.associationwechatapply.dto.LoginRequest;
 import com.wechatapply.associationwechatapply.dto.RegisterRequest;
+import com.wechatapply.associationwechatapply.dto.WechatBindRequest;
 import com.wechatapply.associationwechatapply.dto.WechatLoginRequest;
+import com.wechatapply.associationwechatapply.framework.annotation.AuditLog;
+import com.wechatapply.associationwechatapply.framework.annotation.RequireRole;
 import com.wechatapply.associationwechatapply.framework.context.LoginContextHolder;
 import com.wechatapply.associationwechatapply.framework.context.LoginUser;
+import com.wechatapply.associationwechatapply.framework.context.RoleCode;
 import com.wechatapply.associationwechatapply.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +42,30 @@ public class AuthController {
     @PostMapping("/wechat-login")
     public R<Map<String, Object>> wechatLogin(@Valid @RequestBody WechatLoginRequest req) {
         return R.ok(authService.wechatLogin(req));
+    }
+
+    /** 绑定微信：需登录，code 由小程序 wx.login() 获取 */
+    @PostMapping("/wechat/bind")
+    @RequireRole({RoleCode.ADMIN, RoleCode.LEADER, RoleCode.ASSOC})
+    @AuditLog(action = "绑定微信")
+    public R<Void> bindWechat(@Valid @RequestBody WechatBindRequest req) {
+        authService.bindWechat(req.getCode());
+        return R.ok();
+    }
+
+    /** 解除微信绑定：需登录 */
+    @PostMapping("/wechat/unbind")
+    @RequireRole({RoleCode.ADMIN, RoleCode.LEADER, RoleCode.ASSOC})
+    @AuditLog(action = "解绑微信")
+    public R<Void> unbindWechat() {
+        authService.unbindWechat();
+        return R.ok();
+    }
+
+    /** 当前账号的微信绑定状态 */
+    @GetMapping("/wechat/status")
+    public R<Map<String, Object>> wechatStatus() {
+        return R.ok(Map.<String, Object>of("bound", authService.wechatBound()));
     }
 
     /** 当前登录用户信息（需携带 token） */

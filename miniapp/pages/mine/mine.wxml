@@ -14,6 +14,11 @@
     <view class="cell" bindtap="changePassword">
       <text>修改密码</text><text class="muted">›</text>
     </view>
+    <view class="cell" bindtap="toggleWechat">
+      <text>微信绑定</text>
+      <text class="muted {{wechatBound ? 'bound' : ''}}">{{wechatBound ? '已绑定 · 点击解绑' : '未绑定 · 点击绑定'}} ›</text>
+    </view>
+
     <view class="cell" bindtap="about">
       <text>关于系统</text><text class="muted">v1.0 ›</text>
     </view>

@@ -21,6 +21,15 @@ public interface AuthService {
     /** 小程序微信登录：code 换 openid，绑定账号后签发 token（SRS 7.2） */
     Map<String, Object> wechatLogin(WechatLoginRequest req);
 
+    /** 绑定微信：当前登录账号 + wx.login 的 code → 写入 openid（一个微信仅能绑一个账号） */
+    void bindWechat(String code);
+
+    /** 解绑微信：清空当前账号的 openid */
+    void unbindWechat();
+
+    /** 当前账号是否已绑定微信 */
+    boolean wechatBound();
+
     /** 解析 token 重建登录上下文（供拦截器之外的测试场景使用） */
     LoginUser parseToken(String token);
 }

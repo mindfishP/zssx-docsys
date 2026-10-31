@@ -29,6 +29,7 @@
           <span>活跃度评估（会员规模 25% · 活动频次 25% · 完整率 20% · 年检 20% · 一次通过率 10%）</span>
           <div>
             <el-button size="small" @click="loadActivity">刷新</el-button>
+            <el-button size="small" :loading="exporting" @click="exportReport">导出报表</el-button>
             <el-button v-if="user.isAdmin" size="small" type="primary" :loading="evaluating"
               @click="recalculate">重新计算</el-button>
           </div>
@@ -62,7 +63,7 @@
           <template #default="{ row }">{{ Math.round(row.passRate) }}</template>
         </el-table-column>
       </el-table>
-      <div class="hint">指标按档案数据实时计算；“重新计算”会把得分与分档写回商协会主档，名录页同步更新。</div>
+
     </el-card>
   </div>
 </template>
@@ -71,7 +72,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
-import { dashboard, activityList, evaluateActivity } from '../../api'
+import { dashboard, activityList, evaluateActivity, exportActivity } from '../../api'
 import { useUserStore } from '../../store/user'
 
 const user = useUserStore()
@@ -79,11 +80,27 @@ const d = reactive({})
 const activity = ref([])
 const loading = ref(true)
 const evaluating = ref(false)
+const exporting = ref(false)
 const industryRef = ref()
 const majorRef = ref()
 
 async function loadActivity() {
   activity.value = await activityList()
+}
+
+async function exportReport() {
+  exporting.value = true
+  try {
+    const blob = await exportActivity()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = '协会活跃度报表.xlsx'
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  } finally {
+    exporting.value = false
+  }
 }
 
 async function recalculate() {

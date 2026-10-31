@@ -50,7 +50,7 @@
           <el-table-column prop="archiveId" label="档案编号" width="220" />
           <el-table-column prop="applicantAssoc" label="申请协会" width="100" />
           <el-table-column prop="reason" label="借阅事由" min-width="180" show-overflow-tooltip />
-          <el-table-column prop="dueAt" label="应还时间" width="160" />
+          <el-table-column prop="dueAt" label="自动归还时间" width="160" />
           <el-table-column label="状态" width="100">
             <template #default="{ row }">
               <el-tag :type="statusType(row.borrowStatus)">{{ statusText(row.borrowStatus) }}</el-tag>
@@ -85,11 +85,11 @@
       <el-form :model="form" label-width="90px">
         <el-form-item label="借阅事由" required>
           <el-input v-model="form.reason" type="textarea" :rows="3" maxlength="200" show-word-limit
-            placeholder="如：参考兄弟协会活动组织与会员服务材料" />
+            placeholder="请输入借阅事由" />
         </el-form-item>
-        <el-form-item label="应还时间" required>
+        <el-form-item label="自动归还时间" required>
           <el-date-picker v-model="form.dueAt" type="datetime" value-format="YYYY-MM-DDTHH:mm:ss"
-            placeholder="选择应归还时间" style="width: 100%" />
+            placeholder="选择自动归还时间" style="width: 100%" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -162,7 +162,7 @@ async function submitApply() {
     return
   }
   if (!form.dueAt) {
-    ElMessage.warning('请选择应还时间')
+    ElMessage.warning('请选择自动归还时间')
     return
   }
   submitting.value = true

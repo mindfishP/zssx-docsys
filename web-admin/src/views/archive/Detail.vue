@@ -7,8 +7,8 @@
     </el-page-header>
 
     <template v-if="detail">
-      <el-alert v-if="borrowed" type="warning" :closable="false" class="box"
-        title="借阅查阅中：可在线查看档案信息与附件内容，但不提供附件下载或另存为；到达应还时间将自动归还并收回查阅权限。" />
+            <el-alert v-if="borrowed" type="warning" :closable="false" class="box"
+        title="借阅查阅中：仅可在线查看，不可下载。" />
       <el-card class="box">
         <template #header>
           <div class="card-head">

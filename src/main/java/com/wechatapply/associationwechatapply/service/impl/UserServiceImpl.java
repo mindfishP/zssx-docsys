@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wechatapply.associationwechatapply.common.exception.BusinessException;
 import com.wechatapply.associationwechatapply.common.result.ResultCode;
+import com.wechatapply.associationwechatapply.common.util.PasswordPolicy;
 import com.wechatapply.associationwechatapply.dto.ChangePasswordRequest;
 import com.wechatapply.associationwechatapply.entity.SysUser;
 import com.wechatapply.associationwechatapply.framework.context.LoginContextHolder;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
         if (req.getOldPassword().equals(req.getNewPassword())) {
             throw new BusinessException(ResultCode.BAD_REQUEST, "新密码不能与原密码相同");
         }
+        PasswordPolicy.check(req.getNewPassword());
         user.setPasswordHash(encoder.encode(req.getNewPassword()));
         userMapper.updateById(user);
     }

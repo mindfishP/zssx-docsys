@@ -1,5 +1,6 @@
 .header { padding: 40rpx 32rpx 24rpx; }
 .hello { font-size: 38rpx; font-weight: 600; }
+.hello-name { color: #d4875a; }
 .light { color: #909399; margin-top: 8rpx; }
 .stats { display: flex; margin: 8rpx 24rpx 0; background: #fff; border-radius: 16rpx; padding: 28rpx 0; }
 .stat { flex: 1; text-align: center; }

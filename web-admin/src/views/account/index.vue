@@ -8,11 +8,11 @@
           <el-input :model-value="user.username" disabled />
         </el-form-item>
         <el-form-item label="姓名">
-          <el-input v-model="profile.realName" maxlength="32" placeholder="用于页面显示，建议填写真实姓名" />
+          <el-input v-model="profile.realName" maxlength="32" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="savingName" @click="saveName">保存姓名</el-button>
-          <span class="hint">账号不可修改，姓名可随时修改</span>
+  
         </el-form-item>
       </el-form>
     </el-card>
@@ -26,7 +26,7 @@
         </el-form-item>
         <el-form-item label="新密码">
           <el-input v-model="pwd.newPassword" type="password" show-password autocomplete="new-password"
-            placeholder="6-32 位" />
+            placeholder="8-32 位，含字母和数字" />
         </el-form-item>
         <el-form-item label="确认新密码">
           <el-input v-model="pwd.confirm" type="password" show-password autocomplete="new-password" />
@@ -140,13 +140,12 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="inviteForm.roleCode === 'ASSOC'" label="加入协会">
-          <el-select v-model="inviteForm.assocCode" filterable placeholder="选择注册后加入的协会">
+          <el-select v-model="inviteForm.assocCode" filterable placeholder="选择所属协会">
             <el-option v-for="a in associations" :key="a.assocCode"
               :label="`${a.assocName}（${a.assocCode}）`" :value="a.assocCode" />
           </el-select>
         </el-form-item>
-        <el-alert type="warning" :closable="false"
-          title="邀请码 12 小时内有效，仅可使用一次；使用后按所选角色与协会创建账号。" />
+        
         <div v-if="createdCode" class="created">
           新邀请码：<span class="code">{{ createdCode }}</span>
           <el-button link type="primary" @click="copyCode">复制</el-button>
@@ -200,7 +199,7 @@ async function submitPassword() {
     return
   }
   if (pwd.newPassword.length < 6) {
-    ElMessage.warning('新密码至少 6 位')
+    ElMessage.warning('新密码至少 8 位，且需包含字母和数字')
     return
   }
   if (pwd.newPassword !== pwd.confirm) {

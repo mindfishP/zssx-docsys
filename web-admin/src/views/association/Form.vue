@@ -6,40 +6,40 @@
       <el-form :model="form" label-width="130px" class="form">
         <el-form-item label="协会编号" :required="!editing">
           <el-input v-model="form.assocCode" maxlength="16" style="width: 220px"
-            placeholder="如 A008" :disabled="editing" />
-          <span class="tip">{{ editing ? '协会编号创建后不可修改' : '协会唯一编号，用作档案目录与账号归属' }}</span>
+            placeholder="请输入协会编号" :disabled="editing" />
+
         </el-form-item>
 
         <el-form-item label="协会名称" required>
-          <el-input v-model="form.assocName" maxlength="100" placeholder="如 中山市古镇灯饰产业商会" />
+          <el-input v-model="form.assocName" maxlength="100" placeholder="请输入协会名称" />
         </el-form-item>
 
         <el-form-item label="行业类别" required>
           <el-select v-model="form.industryType" placeholder="选择行业" style="width: 220px">
             <el-option v-for="i in industries" :key="i" :label="i" :value="i" />
           </el-select>
-          <span class="tip">用于行业分布统计与政策定向推送</span>
+
         </el-form-item>
 
         <el-form-item label="登记机关">
           <el-input v-model="form.registerOrg" maxlength="64" style="width: 320px"
-            placeholder="如 中山市民政局" />
+            placeholder="请输入登记机关" />
         </el-form-item>
 
         <el-form-item label="登记日期">
           <el-date-picker v-model="form.registerDate" type="date" value-format="YYYY-MM-DD"
             placeholder="选择登记日期" style="width: 220px" :clearable="false"
             :disabled="editing" @change="onDateChange" />
-          <span class="tip">{{ editing ? '登记日期不可修改' : '默认今天，可按登记证书上的日期修改' }}</span>
+
         </el-form-item>
 
         <el-form-item label="法定代表人">
-          <el-input v-model="form.legalPerson" maxlength="32" style="width: 220px" placeholder="如 张三" />
+          <el-input v-model="form.legalPerson" maxlength="32" style="width: 220px" placeholder="请输入法定代表人" />
         </el-form-item>
 
         <el-form-item label="联系电话">
           <el-input v-model="form.contactPhone" maxlength="20" style="width: 260px"
-            placeholder="如 0760-88888888 或 13800000000" />
+            placeholder="请输入联系电话" />
         </el-form-item>
 
         <el-form-item v-if="editing" label="协会状态">

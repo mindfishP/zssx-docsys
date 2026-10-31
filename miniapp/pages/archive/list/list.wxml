@@ -14,7 +14,7 @@
       <view class="muted">{{item.assocCode}} · {{item.archiveYear}} 年 · {{item.majorCode}} 类</view>
       <view class="muted">档案编号：{{item.archiveId || '—（未归档）'}}</view>
     </view>
-    <view wx:if="{{hasMore && list.length > 0}}" class="more" bindtap="loadMore">{{loadingMore ? '加载中…' : '加载更多'}}</view>
+    <view wx:if="{{hasMore && list.length > 0}}" class="more" bindtap="loadMore">加载更多</view>
     <view wx:if="{{!hasMore && list.length > 0}}" class="more muted">没有更多了</view>
   </view>
 </view>

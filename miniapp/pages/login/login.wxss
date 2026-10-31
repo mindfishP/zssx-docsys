@@ -1,15 +1,50 @@
-.page { min-height: 100vh; background: #1a2330; padding: 0 48rpx; }
-.hero { padding: 160rpx 0 60rpx; text-align: center; }
-.logo {
-  width: 120rpx; height: 120rpx; line-height: 120rpx; margin: 0 auto 28rpx;
-  border-radius: 24rpx; background: #d4875a; color: #fff; font-size: 56rpx; font-weight: 700;
+/* 深色背景 + 表单整体垂直居中 */
+.page {
+  min-height: 100vh;
+  background: #1a2330;
+  display: flex;
+  flex-direction: column;
+  padding: 60rpx 48rpx calc(60rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
-.name { color: #fff; font-size: 38rpx; font-weight: 600; }
+/* margin:auto 实现垂直居中；内容超高时自动退化为正常滚动，不会把 logo 顶出屏幕 */
+.center-box { width: 100%; margin: auto 0; }
+
+/* logo 区与框体之间留出明显间距，避免挤在一起 */
+.hero { padding: 0 0 76rpx; text-align: center; }
+.logo {
+  width: 128rpx; height: 128rpx; line-height: 128rpx; margin: 0 auto 28rpx;
+  border-radius: 26rpx; background: #d4875a; color: #fff; font-size: 58rpx; font-weight: 700;
+}
+.name { color: #fff; font-size: 40rpx; font-weight: 600; }
 .sub { color: #8b98a8; font-size: 24rpx; margin-top: 12rpx; }
-.form { background: #fff; border-radius: 20rpx; padding: 40rpx 32rpx; }
-.field { display: flex; align-items: center; border-bottom: 1rpx solid #ebeef5; padding: 24rpx 0; }
-.label { width: 110rpx; color: #606266; font-size: 28rpx; }
-.input { flex: 1; font-size: 30rpx; }
-.login-btn { margin-top: 40rpx; }
-.divider { text-align: center; color: #c0c4cc; font-size: 24rpx; margin: 28rpx 0; }
-.center { text-align: center; margin-top: 28rpx; }
+
+/* 框体加大：更宽的留白 + 阴影，与深色背景区分开 */
+.form {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 64rpx 44rpx;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.28);
+}
+
+/* 输入区放大：更高的行高与更大的字号，便于点按 */
+.field {
+  display: flex;
+  align-items: center;
+  border-bottom: 2rpx solid #ebeef5;
+  padding: 40rpx 0;
+  min-height: 112rpx;
+  box-sizing: border-box;
+}
+.label { width: 128rpx; color: #606266; font-size: 34rpx; }
+.input { flex: 1; font-size: 38rpx; height: 56rpx; line-height: 56rpx; }
+
+/* 两个按钮紧凑排布，去掉中间的“或”分隔 */
+.login-btn, .wechat-btn { padding: 28rpx 0; font-size: 32rpx; border-radius: 14rpx; }
+.login-btn { margin-top: 60rpx; }
+.wechat-btn { margin-top: 20rpx; }
+.center { text-align: center; margin-top: 36rpx; }
+.server-line {
+  margin-top: 28rpx; text-align: center; color: #8b98a8; font-size: 22rpx;
+  word-break: break-all; text-decoration: underline;
+}

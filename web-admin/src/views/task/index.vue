@@ -63,7 +63,7 @@
             placeholder="选择或输入行业类别，如 灯饰" style="width: 100%">
             <el-option v-for="t in industries" :key="t" :label="t" :value="t" />
           </el-select>
-          <div class="tip">该行业类别下的协会都会收到任务，可多选</div>
+
         </el-form-item>
         <el-form-item label="起止时间">
           <el-date-picker v-model="range" type="datetimerange" value-format="YYYY-MM-DDTHH:mm:ss" />

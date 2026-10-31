@@ -5,8 +5,12 @@ spring:
   application:
     name: associationWechatApply
   # Secrets (DB password, JWT key, WeChat keys) live in .env at the project root; the file is git-ignored.
+  # 同时兼容三种工作目录：模块目录运行、仓库根目录运行（mvn -f associationWechatApply/pom.xml）、打进 classpath 的 .env
   config:
-    import: optional:file:./.env[.properties]
+    import:
+      - optional:file:./.env[.properties]
+      - optional:file:./associationWechatApply/.env[.properties]
+      - optional:classpath:.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: "${ZSSX_DB_URL:jdbc:mysql://localhost:3306/association_archive?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}"
